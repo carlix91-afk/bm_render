@@ -13,7 +13,6 @@
             --bg-color: #050505;
             --text-main: #ffffff;
             --text-muted: #888888;
-            --header-height: 140px;
         }
 
         * {
@@ -21,6 +20,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Jost', sans-serif;
+            cursor: none !important; /* Ocultamos el puntero estándar */
         }
 
         body {
@@ -28,6 +28,19 @@
             color: var(--text-main);
             overflow-x: hidden;
             scroll-behavior: smooth;
+        }
+
+        /* --- CURSOR PERSONALIZADO (BLANCO SÓLIDO) --- */
+        #custom-cursor {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.08s ease-out;
         }
 
         /* --- ANIMACIÓN REVEAL --- */
@@ -42,7 +55,7 @@
             transform: translateY(0);
         }
 
-        /* --- NAVEGACIÓN DINÁMICA --- */
+        /* --- NAVEGACIÓN STICKY --- */
         nav {
             position: fixed;
             top: 0;
@@ -55,7 +68,6 @@
             transition: all 0.5s ease;
         }
 
-        /* Clase que se aplica al bajar el scroll */
         nav.scrolled {
             padding: 15px 5%;
             background: rgba(5, 5, 5, 0.85);
@@ -71,7 +83,7 @@
         }
 
         nav.scrolled .logo img {
-            height: 70px; /* Logo más pequeño al bajar */
+            height: 70px;
         }
 
         .nav-links { display: flex; gap: 40px; }
@@ -82,32 +94,23 @@
             letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 300;
-            transition: opacity 0.3s;
+            transition: color 0.3s;
         }
         .nav-links a:hover { color: var(--text-muted); }
 
-        /* --- MENÚ HAMBURGUESA --- */
+        /* MENÚ MÓVIL (HAMBURGUESA) */
         .menu-toggle {
             display: none;
             flex-direction: column;
             gap: 6px;
-            cursor: pointer;
             z-index: 1100;
         }
-
-        .menu-toggle span {
-            width: 28px;
-            height: 1px;
-            background-color: white;
-            transition: all 0.3s ease;
-        }
-
-        /* Animación del icono a X */
+        .menu-toggle span { width: 28px; height: 1px; background: white; transition: 0.3s; }
         .menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* --- HERO --- */
+        /* --- HERO PARALLAX --- */
         .hero {
             position: relative;
             width: 100vw;
@@ -121,54 +124,59 @@
         .hero-video {
             position: absolute;
             top: 50%; left: 50%;
-            min-width: 100%; min-height: 105%;
-            transform: translateX(-50%) translateY(-50%);
+            min-width: 100%; min-height: 115%; 
+            transform: translate(-50%, -50%);
             object-fit: cover;
             object-position: top;
             opacity: 0.8;
+            will-change: transform;
         }
 
         .hero-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, transparent 0%, var(--bg-color) 100%);
+            z-index: 1;
         }
 
-        /* --- SECCIONES Y TÍTULOS --- */
-        .portfolio {
-            padding: 120px 5%;
-        }
+        /* --- SECCIONES --- */
+        .portfolio { padding: 120px 5%; }
 
         .section-title {
             text-align: center;
-            font-size: 42px; /* Título grande */
-            font-weight: 200; /* Delgado */
-            letter-spacing: 18px; /* Muy espaciado */
+            font-size: 42px;
+            font-weight: 200;
+            letter-spacing: 18px;
             text-transform: uppercase;
             color: var(--text-main);
             margin-bottom: 90px;
         }
 
-        /* --- GALERÍA --- */
+        /* --- GALERÍA 50% COLOR --- */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-auto-rows: 320px;
             gap: 25px;
         }
-        .grid-item { overflow: hidden; background-color: #0a0a0a; cursor: pointer; }
+        .grid-item { overflow: hidden; background-color: #0a0a0a; }
         .item-large { grid-column: span 2; grid-row: span 2; }
         .item-vertical { grid-column: span 1; grid-row: span 2; }
         .item-horizontal { grid-column: span 2; grid-row: span 1; }
         
         .grid-item img { 
             width: 100%; height: 100%; object-fit: cover; 
-            opacity: 0.6; filter: grayscale(90%); 
-            transition: transform 1s cubic-bezier(0.2, 1, 0.3, 1), filter 1s ease, opacity 1s ease;
+            opacity: 0.8; 
+            filter: grayscale(50%); /* Base de color al 50% */
+            transition: transform 1s cubic-bezier(0.2, 1, 0.3, 1), filter 1s ease, opacity 0.8s ease;
         }
-        .grid-item:hover img { transform: scale(1.08); opacity: 1; filter: grayscale(0%); }
+        .grid-item:hover img { 
+            transform: scale(1.08); 
+            opacity: 1; 
+            filter: grayscale(0%); /* 100% color */
+        }
 
-        /* --- ANIMACIÓN VIDEOS --- */
+        /* --- MOTION VIDEOS --- */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -177,12 +185,9 @@
             margin: 0 auto;
         }
         .video-item { aspect-ratio: 9/16; background-color: #0a0a0a; overflow: hidden; }
-        .video-item video { width: 100%; height: 106%; object-fit: cover; object-position: top; opacity: 0.9; }
+        .video-item video { width: 100%; height: 106%; object-fit: cover; object-position: top; opacity: 0.9; pointer-events: none; }
 
-        /* --- TOUR 360 --- */
-        .tour-container { max-width: 1300px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.05); }
-
-        /* --- CONTACTO --- */
+        /* --- CONTACTO & FORMSPREE --- */
         .contact-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -191,127 +196,126 @@
             margin: 0 auto;
         }
         .contact-info h3 { font-weight: 200; font-size: 32px; margin-bottom: 30px; letter-spacing: 2px; }
-        .contact-info p { color: var(--text-muted); margin-bottom: 50px; line-height: 2; font-weight: 300; font-size: 14px; }
+        .contact-info p { color: var(--text-muted); margin-bottom: 50px; line-height: 2; font-size: 14px; font-weight: 300; }
+        
         .social-links { display: flex; gap: 40px; }
         .social-links a { color: var(--text-main); font-size: 24px; transition: 0.4s; }
         .social-links a:hover { color: var(--text-muted); transform: translateY(-5px); }
 
         .contact-form { display: flex; flex-direction: column; gap: 30px; }
         .contact-form input, .contact-form textarea {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #1a1a1a;
-            padding: 15px 0;
-            color: white;
-            outline: none;
-            font-weight: 300;
-            letter-spacing: 1px;
+            background: transparent; border: none; border-bottom: 1px solid #1a1a1a;
+            padding: 15px 0; color: white; outline: none; font-weight: 300;
         }
         .contact-form input:focus, .contact-form textarea:focus { border-color: white; }
+        
         .btn-send {
             background: white; color: black; border: none; padding: 20px;
             text-transform: uppercase; letter-spacing: 5px; font-size: 10px;
-            font-weight: 600; cursor: pointer; transition: 0.4s;
+            font-weight: 600; transition: 0.4s;
         }
-        .btn-send:hover { background: #bbb; }
+        .btn-send:hover { background: #bbb; letter-spacing: 7px; }
+
+        #success-message {
+            display: none; text-align: center; padding: 60px 20px; border: 1px solid #1a1a1a;
+        }
 
         /* --- FOOTER --- */
         footer {
-            padding: 80px 5% 40px 5%;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.03);
-            margin-top: 50px;
+            padding: 80px 5% 40px 5%; text-align: center; border-top: 1px solid rgba(255,255,255,0.03); margin-top: 50px;
         }
-        .footer-logo { height: 50px; opacity: 0.5; margin-bottom: 30px; }
+        .footer-logo { height: 50px; opacity: 0.4; margin-bottom: 25px; }
         .footer-info { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; }
-        .footer-copy { font-size: 9px; letter-spacing: 2px; color: #333; margin-top: 20px; }
+        .footer-copy { font-size: 9px; letter-spacing: 2px; color: #222; margin-top: 20px; }
 
         /* --- LIGHTBOX --- */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(5,5,5,0.98); display: flex; justify-content: center;
             align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.4s;
+            overflow: hidden;
         }
         .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lightbox img { max-width: 90%; max-height: 85vh; cursor: grab; user-select: none; }
-        .lightbox-close { position: absolute; top: 40px; right: 50px; font-size: 40px; cursor: pointer; font-weight: 100; color: #444; }
+        .lightbox img { max-width: 90%; max-height: 85vh; user-select: none; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        .lightbox-close { position: absolute; top: 40px; right: 50px; font-size: 40px; color: #444; z-index: 2001; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
+            #custom-cursor { display: none; }
+            * { cursor: auto !important; }
             nav { padding: 20px 5%; }
-            nav.scrolled { padding: 15px 5%; }
-            .logo img { height: 75px; }
-            nav.scrolled .logo img { height: 55px; }
-
             .menu-toggle { display: flex; }
-
             .nav-links {
-                position: fixed;
-                top: 0; right: -100%;
-                width: 100%; height: 100vh;
-                background: var(--bg-color);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: 0.5s;
-                gap: 50px;
+                position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+                background: var(--bg-color); flex-direction: column; justify-content: center;
+                align-items: center; transition: 0.5s; gap: 50px;
             }
             .nav-links.active { right: 0; }
-            .nav-links a { font-size: 18px; }
-
-            .section-title { font-size: 24px; letter-spacing: 10px; margin-bottom: 50px; }
+            .section-title { font-size: 24px; letter-spacing: 10px; }
             .grid-container { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
             .video-grid { grid-template-columns: 1fr; max-width: 300px; }
-            .contact-content { grid-template-columns: 1fr; gap: 60px; text-align: center; }
+            .contact-content { grid-template-columns: 1fr; gap: 50px; text-align: center; }
             .social-links { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
+    <div id="custom-cursor"></div>
+
     <nav id="navbar">
         <a href="#" class="logo">
             <img src="logo-bm.png" alt="BM Render Logo">
         </a>
-
-        <div class="menu-toggle" id="mobile-menu-btn">
+        <div class="menu-toggle" id="mobile-btn">
             <span></span><span></span><span></span>
         </div>
-
         <div class="nav-links" id="nav-menu">
-            <a href="#galeria">Renders</a>
+            <a href="#galeria">Portafolio</a>
             <a href="#animacion">Animación</a>
-            <a href="#360">Tour 360</a>
+            <a href="#360">Inmersivo</a>
             <a href="#contacto">Contacto</a>
         </div>
     </nav>
 
     <section class="hero">
-        <video class="hero-video" autoplay loop muted playsinline>
+        <video id="heroVideo" class="hero-video" autoplay loop muted playsinline poster="render1.jpg">
             <source src="hero-video.mp4" type="video/mp4">
         </video>
         <div class="hero-overlay"></div>
     </section>
 
     <section id="galeria" class="portfolio">
-        <h2 class="section-title reveal">Portafolio</h2>
+        <h2 class="section-title reveal">Trabajos Seleccionados</h2>
         <div class="grid-container">
-            <div class="grid-item item-large reveal"><img src="render1.jpg" alt="Render 1"></div>
-            <div class="grid-item item-vertical reveal"><img src="render2.jpg" alt="Render 2"></div>
-            <div class="grid-item reveal"><img src="render3.jpg" alt="Render 3"></div>
-            <div class="grid-item reveal"><img src="render4.jpg" alt="Render 4"></div>
-            <div class="grid-item item-horizontal reveal"><img src="render5.jpg" alt="Render 5"></div>
-            <div class="grid-item reveal"><img src="render6.jpg" alt="Render 6"></div>
-            <div class="grid-item reveal"><img src="render7.jpg" alt="Render 7"></div>
+            <div class="grid-item item-large reveal"><img src="render1.jpg" alt="Render"></div>
+            <div class="grid-item item-vertical reveal"><img src="render2.jpg" alt="Render"></div>
+            <div class="grid-item reveal"><img src="render3.jpg" alt="Render"></div>
+            <div class="grid-item reveal"><img src="render4.jpg" alt="Render"></div>
+            <div class="grid-item item-horizontal reveal"><img src="render5.jpg" alt="Render"></div>
+            <div class="grid-item reveal"><img src="render6.jpg" alt="Render"></div>
+            <div class="grid-item reveal"><img src="render7.jpg" alt="Render"></div>
         </div>
     </section>
 
     <section id="animacion" class="portfolio">
-        <h2 class="section-title reveal">Motion</h2>
+        <h2 class="section-title reveal">Visualización Animada</h2>
         <div class="video-grid">
-            <div class="video-item reveal"><video autoplay loop muted playsinline><source src="vertical1.mp4" type="video/mp4"></video></div>
-            <div class="video-item reveal"><video autoplay loop muted playsinline><source src="vertical2.mp4" type="video/mp4"></video></div>
-            <div class="video-item reveal"><video autoplay loop muted playsinline><source src="vertical3.mp4" type="video/mp4"></video></div>
+            <div class="video-item reveal">
+                <video autoplay loop muted playsinline poster="render2.jpg">
+                    <source src="vertical1.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video-item reveal">
+                <video autoplay loop muted playsinline poster="render3.jpg">
+                    <source src="vertical2.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video-item reveal">
+                <video autoplay loop muted playsinline poster="render4.jpg">
+                    <source src="vertical3.mp4" type="video/mp4">
+                </video>
+            </div>
         </div>
     </section>
 
@@ -326,23 +330,31 @@
         <h2 class="section-title reveal">Contacto</h2>
         <div class="contact-content">
             <div class="contact-info reveal">
-                <h3>Creemos algo único.</h3>
-                <p>Ubicado en el corazón de Encarnación, brindo servicios de visualización de alta fidelidad para arquitectos y desarrolladores de todo el mundo.</p>
+                <h3>Diseñemos el futuro.</h3>
+                <p>Estudio de visualización 3D con base en Encarnación, Paraguay. Fotorrealismo y experiencias digitales de alta gama.</p>
                 <div class="social-links">
                     <a href="https://wa.me/595975175406" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
                     <a href="https://www.instagram.com/bm.render/?hl=es-la" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
-            <form class="contact-form reveal">
-                <input type="text" placeholder="Nombre completo" required>
-                <input type="email" placeholder="Email" required>
-                <textarea placeholder="Cuéntame sobre tu proyecto" rows="4" required></textarea>
-                <button type="submit" class="btn-send">Enviar Solicitud</button>
-            </form>
+
+            <div class="contact-form-container reveal">
+                <form id="contact-form" action="https://formspree.io/f/xdapgvjp" method="POST" class="contact-form">
+                    <input type="text" name="name" placeholder="Nombre completo" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="message" placeholder="¿Cómo puedo ayudarte?" rows="4" required></textarea>
+                    <button type="submit" id="btn-submit" class="btn-send">Enviar</button>
+                </form>
+                
+                <div id="success-message">
+                    <h3 style="font-weight: 200; letter-spacing: 5px; color: white;">GRACIAS</h3>
+                    <p style="color: #888; font-size: 12px; margin-top: 20px; letter-spacing: 2px;">MENSAJE ENVIADO. ME PONDRÉ EN CONTACTO PRONTO.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer class="reveal">
+    <footer>
         <img src="logo-bm.png" alt="BM Render" class="footer-logo">
         <div class="footer-info">Encarnación, Paraguay</div>
         <div class="footer-copy">&copy; 2026 BM Render. High-End Visualization.</div>
@@ -354,94 +366,114 @@
     </div>
 
     <script>
-        // 1. STICKY HEADER & LOGO SIZE
+        // 1. CURSOR
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // 2. SCROLL EFFECTS (Sticky Nav + Parallax)
         window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+            const heroVid = document.getElementById('heroVideo');
+            
+            // Parallax
+            heroVid.style.transform = `translate(-50%, calc(-50% + ${scroll * 0.3}px))`;
+            
+            // Sticky
+            if (scroll > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
         });
 
-        // 2. MOBILE MENU TOGGLE
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const navMenu = document.getElementById('nav-menu');
-        
-        menuBtn.addEventListener('click', () => {
-            menuBtn.classList.toggle('active');
-            navMenu.classList.toggle('active');
+        // 3. MENÚ MÓVIL
+        const btn = document.getElementById('mobile-btn');
+        const menu = document.getElementById('nav-menu');
+        btn.onclick = () => {
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+        };
+        document.querySelectorAll('.nav-links a').forEach(l => l.onclick = () => {
+            btn.classList.remove('active');
+            menu.classList.remove('active');
         });
 
-        // Cerrar menú al clickear un link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuBtn.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-
-        // 3. REVEAL ANIMATION
+        // 4. REVEAL
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 4. LIGHTBOX (ZOOM + DRAG)
+        // 5. ENVÍO DE FORMULARIO AJAX
+        const form = document.getElementById("contact-form");
+        const successMsg = document.getElementById("success-message");
+        const btnSubmit = document.getElementById("btn-submit");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            btnSubmit.innerText = "ENVIANDO...";
+            btnSubmit.disabled = true;
+            const data = new FormData(e.target);
+            fetch(e.target.action, {
+                method: form.method,
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    form.style.display = "none";
+                    successMsg.style.display = "block";
+                } else {
+                    alert("Error al enviar.");
+                    btnSubmit.innerText = "ENVIAR";
+                    btnSubmit.disabled = false;
+                }
+            }).catch(() => {
+                alert("Error de conexión.");
+                btnSubmit.innerText = "ENVIAR";
+                btnSubmit.disabled = false;
+            });
+        });
+
+        // 6. LIGHTBOX (ZOOM + DRAG)
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxClose = document.getElementById('lightbox-close');
         const galleryImages = document.querySelectorAll('.grid-item img');
-        let currentScale = 1;
-        let isDragging = false;
-        let startX, startY;
-        let translateX = 0, translateY = 0;
+        let currentScale = 1, translateX = 0, translateY = 0, isDragging = false, startX, startY;
 
-        function updateTransform(smooth = false) {
+        function updateImg(smooth = false) {
             lightboxImg.style.transition = smooth ? "transform 0.3s ease-out" : "none";
             lightboxImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
         }
 
         galleryImages.forEach(img => {
-            img.addEventListener('click', () => {
+            img.onclick = () => {
                 lightbox.classList.add('active');
                 lightboxImg.src = img.src;
                 currentScale = 1; translateX = 0; translateY = 0;
-                updateTransform(true);
-            });
+                updateImg(true);
+            };
         });
 
-        const closeFunc = () => { lightbox.classList.remove('active'); };
-        lightboxClose.addEventListener('click', closeFunc);
-
-        lightboxImg.addEventListener('wheel', (e) => {
+        document.getElementById('lightbox-close').onclick = () => lightbox.classList.remove('active');
+        
+        lightboxImg.onwheel = (e) => {
             e.preventDefault();
-            const zoomSpeed = 0.2;
-            currentScale = e.deltaY < 0 ? currentScale + zoomSpeed : currentScale - zoomSpeed;
+            currentScale = e.deltaY < 0 ? currentScale + 0.2 : currentScale - 0.2;
             currentScale = Math.min(Math.max(1, currentScale), 4);
-            if (currentScale === 1) { translateX = 0; translateY = 0; }
-            updateTransform(true);
-        });
+            if(currentScale === 1) { translateX = 0; translateY = 0; }
+            updateImg(true);
+        };
 
-        lightboxImg.addEventListener('mousedown', (e) => {
-            if (currentScale > 1) {
-                isDragging = true;
-                startX = e.clientX - translateX;
-                startY = e.clientY - translateY;
-            }
-        });
-
-        window.addEventListener('mousemove', (e) => {
+        lightboxImg.onmousedown = (e) => {
+            if (currentScale > 1) { isDragging = true; startX = e.clientX - translateX; startY = e.clientY - translateY; }
+        };
+        window.onmousemove = (e) => {
             if (!isDragging) return;
-            translateX = e.clientX - startX;
-            translateY = e.clientY - startY;
-            updateTransform(false);
-        });
-
-        window.addEventListener('mouseup', () => isDragging = false);
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFunc(); });
-        lightbox.addEventListener('click', (e) => { if (e.target !== lightboxImg) closeFunc(); });
+            translateX = e.clientX - startX; translateY = e.clientY - startY;
+            updateImg(false);
+        };
+        window.onmouseup = () => isDragging = false;
     </script>
-
 </body>
 </html>
